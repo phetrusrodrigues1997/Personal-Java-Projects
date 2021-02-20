@@ -1,12 +1,12 @@
 package hackathon;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-
-
 
 public class Main {
 	private static Scanner userInput = new Scanner(System.in); // Scanner to get the user input.
-
+	private static String selectedItems = "";
 	public Main() {
 
 	}
@@ -16,13 +16,18 @@ public class Main {
 
 		// First interaction with the user
 		System.out.println("Welcome to FiveGuys, our items for sale today are: " + "\n");
-		System.out.println("Burger: £5.00     Fries: £2.50      Fizzy Drink: £1.50" + "\n");
+		System.out.println("Ham Burger: £6.95     Fries: £4.50     Fizzy Drink: £3.15     Cheese Burger: £5.95     Milkshake: £5.25     Double Cheese Burger: £7.95     Hot Dog: £4.50"	+ "\n");
 		System.out.println("Enter your name: ");
 
 		String name = userInput.nextLine(); // The user's name is saved into a variable
-
 		int numberOfItemsDiscounted = 0;
 		double totalPrice = 0; // Total price spent by the customer
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy ");
+		DateTimeFormatter time = DateTimeFormatter.ofPattern("HH:mm");
+		LocalDateTime now = LocalDateTime.now();
+
+		
 
 		int index = 0; // Variable to keep the while loop going for as long as necessary.
 
@@ -31,38 +36,54 @@ public class Main {
 		while (index == 0) {
 			System.out.println("Enter an item: ");
 			String line = userInput.nextLine(); // Variable to symbolise the item entered by the user
+			
 			if (line.equalsIgnoreCase("Finished")) {
 				index = 1; // Index is now 1 so the loop should end
 				break; // For some reason it doesn't end so I used a break.
 			}
-			// Checks whether the user should get a discount
-			if (item.shouldGetADiscount(name)) {
 
-				numberOfItemsDiscounted++;
-				item.setNumberOfItemsDiscounted(numberOfItemsDiscounted); // Sets the current number of items to be
+			if (item.check(line)) {
+				// Checks whether the user should get a discount
+				if (item.shouldGetADiscount(name)) {
+
+					numberOfItemsDiscounted++;
+					item.setNumberOfItemsDiscounted(numberOfItemsDiscounted); // Sets the current number of items to be
 																			// discounted
 
+				}
+				String userInput = line.substring(0, 1).toUpperCase() + line.substring(1);
+				selectedItems +=  userInput + " ";	
+				System.out.println("Item entered succesfully!" + "\n");
+
+				totalPrice += item.getPrice(line); // Each item's price is added to the total price variable as long as
+													// the
+													// loop is still going.
+
+			}
+			else {
+				System.out.println("This item is not on the menu" + "\n");
 			}
 
-			System.out.println("Item entered succesfully!" + "\n");
+			
 
-			totalPrice += item.getPrice(line); // Each item's price is added to the total price variable as long as the
-												// loop is still going.
-
+			
 		}
-        
-		System.out.println("\n" + "Total price: £" + totalPrice + "\n");
+
+		System.out.println("\n" + "Total price: £" + totalPrice + "\n" );
 
 		// Checks whether the user should get a discount, if so then we display how much
 		// they have saved
 		if (item.shouldGetADiscount(name)) {
 			System.out.println("Discount code accepted !");
 			System.out.println("Full amount discounted: £" + item.getFullDiscountAmount());
+			System.out.println("You have saved: " + Math.round(item.getFullDiscountAmount() / totalPrice * 100) + "%");
 		} else {
 			System.out.println("You are not eligible for a discount!" + "\n");
 		}
-		System.out.println("Thanks for shopping at FiveGuys! :)");
+		
+		System.out.println("You have bought: " + selectedItems + "x" + 2);
+		System.out.println("Bought on " + dtf.format(now) + "at " + time.format(now) +"\n");
+		System.out.println("Bye " + name + "! Thanks for shopping at FiveGuys! :)");
 
 	}
 }
-
