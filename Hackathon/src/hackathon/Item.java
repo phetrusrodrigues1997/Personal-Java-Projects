@@ -1,5 +1,6 @@
 package hackathon;
 
+
 /**
  * This class models an item, that is available to buy at five guys.
  * 
@@ -9,9 +10,10 @@ package hackathon;
 public class Item {
 	private double price = 0;
 	private boolean discount = false;
+	
 
 	private static enum availableItems {
-		Fries, Fizzy_Drink, Ham_Burger, Milkshake, Double_Cheeseburger, Cheeseburger, Hot_Dog
+		Fries, Drink, Ham_Burger, Milkshake, Double_Cheeseburger, Cheeseburger, Hot_Dog
 	};
 
 	private int numberOfItemsDiscounted = 0;
@@ -54,7 +56,7 @@ public class Item {
 				price -= 0.50;
 
 			}
-		} else if (item.equalsIgnoreCase("Fizzy_Drink")) {
+		} else if (item.equalsIgnoreCase("Drink")) {
 			price = 3.15;
 
 			if (discount) {
